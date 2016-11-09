@@ -20,10 +20,8 @@ function createEntries(inputStream, rootPath){
 	    while ((zipEntry = zipFolderInputStream.getNextEntry()) !== null) {
 	    	console.log(zipEntry.getName());
 			if (zipEntry.isDirectory()){
-				console.log("Creating folder " + zipEntry.getName());
 				createFolder(rootPath, zipEntry);
 			} else {
-				console.log("Creating file " + zipEntry.getName());
 				createFile(rootPath, zipEntry);		
 			}
 		}

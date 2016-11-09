@@ -8,6 +8,7 @@
      </div>
      
      <div class="modal-body" nv-file-drop="" uploader="zipUploader" filters="queueLimit, zipFilter">
+     	<label>Parent folder for zip files: <input type="text" ng-init="zipUploader.path='/'" ng-model="zipUploader.path"></label>
      	<div >
             <h3>Upload files</h3>
             <div ng-show="zipUploader.isHTML5">
@@ -83,7 +84,6 @@
             </div>
             
         </div> 
-      	<label>Parent folder for zip files: <input type="text" ng-init="zipUploader.path='/'" ng-model="zipUploader.path" ng-change="zipPathChanged()"></label>
       </div>
      
      <div class="modal-footer">

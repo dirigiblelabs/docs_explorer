@@ -195,17 +195,10 @@ angular
         }
     });
     
-    $scope.zipPathChanged = function(){
-    	$scope.zipUploader.url = zipUploadPath + "?path=" + zipUploader.path;
-    };
-
-	zipUploader.onAfterAddingFile = function(fileItem) {
-    	console.log(zipUploader.url);
-    };
-    
     zipUploader.onBeforeUploadItem = function(item) {
-    	console.log($scope.zipUploader.url);
-    	$scope.zipUploader.url = zipUploadPath + "?path=" + zipUploader.path;
+    	if (zipUploader.path){
+	    	item.url = zipUploadPath + "?path=" + zipUploader.path;
+    	}
     };
 
     // UPLOADER CALLBACKS
