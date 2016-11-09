@@ -7,39 +7,39 @@
 	   </h3>
      </div>
      
-     <div class="modal-body">
-     	<div class="col-md-3">
+     <div class="modal-body" nv-file-drop="" uploader="zipUploader" filters="queueLimit, zipFilter">
+     	<div >
             <h3>Upload files</h3>
-            <div ng-show="uploader.isHTML5">
+            <div ng-show="zipUploader.isHTML5">
                 <!-- 3. nv-file-over uploader="link" over-class="className" -->
-                <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
-                    Drop files here
+                <div class="well my-drop-zone" nv-file-over="" uploader="zipUploader">
+                    Drop zip files here
                 </div>
             </div>
             or browse your file system
-            <input type="file" nv-file-select="" uploader="uploader" multiple  /><br/>
+            <input type="file" nv-file-select="" uploader="zipUploader" multiple  /><br/>
 
         </div>
      
-     	<div class="col-md-6" style="margin-bottom: 40px">
+     	<div  style="margin-bottom: 40px">
             <h3>Zip upload queue</h3>
-            <p>Queue length: {{ uploader.queue.length }}</p>
+            <p>Queue length: {{ zipUploader.queue.length }}</p>
 
             <table class="table">
                 <thead>
                     <tr>
                         <th width="50%">Name</th>
-                        <th ng-show="uploader.isHTML5">Size</th>
-                        <th ng-show="uploader.isHTML5">Progress</th>
+                        <th ng-show="zipUploader.isHTML5">Size</th>
+                        <th ng-show="zipUploader.isHTML5">Progress</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in uploader.queue">
+                    <tr ng-repeat="item in zipUploader.queue">
                         <td><strong>{{ item.file.name }}</strong></td>
-                        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-                        <td ng-show="uploader.isHTML5">
+                        <td ng-show="zipUploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                        <td ng-show="zipUploader.isHTML5">
                             <div class="progress" style="margin-bottom: 0;">
                                 <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
                             </div>
@@ -68,28 +68,25 @@
                 <div>
                     Queue progress:
                     <div class="progress" style="">
-                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': zipUploader.progress + '%' }"></div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                <button type="button" class="btn btn-success btn-s" ng-click="zipUploader.uploadAll()" ng-disabled="!zipUploader.getNotUploadedItems().length">
                     <span class="glyphicon glyphicon-upload"></span> Upload all
                 </button>
-                <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                <button type="button" class="btn btn-warning btn-s" ng-click="zipUploader.cancelAll()" ng-disabled="!zipUploader.isUploading">
                     <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
                 </button>
-                <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                <button type="button" class="btn btn-danger btn-s" ng-click="zipUploader.clearQueue()" ng-disabled="!zipUploader.queue.length">
                     <span class="glyphicon glyphicon-trash"></span> Remove all
                 </button>
             </div>
             
-        </div>
-     
-      	<label><input type="checkbox" ng-init="extractZip=false" ng-model="extractZip"> Extract zip file</label>
-      	<label>Parent folder for zip: <input type="text" ng-show="extractZip" ng-model="extractZipPath"></label>
+        </div> 
+      	<label>Parent folder for zip files: <input type="text" ng-init="zipUploader.path='/'" ng-model="zipUploader.path" ng-change="zipPathChanged()"></label>
       </div>
      
      <div class="modal-footer">
-       <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteItems(forceDelete)">Confirm</button>
        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
      </div>
      

@@ -6,6 +6,7 @@ angular
 	var managePath = rootPath + '/manage';
 	var createPath = managePath + '/create';
 	$scope.createDocPath = createPath + '/document';
+	var zipUploadPath = createPath + '/zip';
 	var createFolderPath = createPath + '/folder';
 	var updatePath = managePath + '/update';
 	var renamePath = updatePath + '/rename';
@@ -162,7 +163,7 @@ angular
 	// FILE UPLOADER
 	
     var uploader = $scope.uploader = new FileUploader({
-        url: '../../js-secured/ext_registry_cmis_explorer/document'
+        url: $scope.createDocPath
     });
 
     // UPLOADER FILTERS
@@ -173,6 +174,39 @@ angular
             return this.queue.length < 10;
         }
     });
+    
+    //ZIP EXTRACT UPLOADER
+    
+    var zipUploader = $scope.zipUploader = new FileUploader({
+        url: zipUploadPath
+    });
+    
+    zipUploader.filters.push({
+        name: 'queueLimit',
+        fn: function(item /*{File|FileLikeObject}*/, options) {
+            return this.queue.length < 1;
+        }
+    });
+    
+    zipUploader.filters.push({
+        name: 'zipFilter',
+        fn: function(item /*{File|FileLikeObject}*/, options) {
+            return item.type === "application/zip";
+        }
+    });
+    
+    $scope.zipPathChanged = function(){
+    	$scope.zipUploader.url = zipUploadPath + "?path=" + zipUploader.path;
+    };
+
+	zipUploader.onAfterAddingFile = function(fileItem) {
+    	console.log(zipUploader.url);
+    };
+    
+    zipUploader.onBeforeUploadItem = function(item) {
+    	console.log($scope.zipUploader.url);
+    	$scope.zipUploader.url = zipUploadPath + "?path=" + zipUploader.path;
+    };
 
     // UPLOADER CALLBACKS
 
@@ -180,9 +214,7 @@ angular
 //        console.info('onWhenAddingFileFailed', item, filter, options);
     };
     uploader.onAfterAddingFile = function(fileItem) {
-    	if (fileItem.file.type === "application/zip"){
-    		$('#extractZipModal').modal('toggle');
-    	}
+    	
     };
     uploader.onAfterAddingAll = function(addedFileItems) {
 //        console.info('onAfterAddingAll', addedFileItems);
