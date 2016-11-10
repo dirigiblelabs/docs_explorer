@@ -1,0 +1,10 @@
+[
+  {
+    "location":"/docs_explorer",
+    "roles":
+      [
+        {"role":"Everyone"}
+      ]
+  }
+]
+
