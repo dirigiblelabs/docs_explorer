@@ -1,9 +1,23 @@
 [
   {
-    "location":"/docs_explorer",
+    "location":"/docs_explorer/manage",
     "roles":
       [
-        {"role":"Everyone"}
+        {"role":"Administrator"}
+      ]
+  },
+  {
+    "location":"/docs_explorer/read/folder",
+    "roles":
+      [
+        {"role":"ReadOnly"}
+      ]
+  },
+  {
+    "location":"/docs_explorer/web",
+    "roles":
+      [
+        {"role":"ReadOnly"}
       ]
   }
 ]
