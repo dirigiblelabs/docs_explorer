@@ -4,6 +4,9 @@
 var zipLib = require('io/zip');
 var folderLib = require("docs_explorer/lib/folder_lib");
 var documentLib = require("docs_explorer/lib/document_lib");
+var objectLib = require("docs_explorer/lib/object_lib");
+var streams = require('io/streams');
+var zipAPI = require('io/zip');
 
 
 exports.unpackZip = function(folderPath, zip){
@@ -50,4 +53,43 @@ function getFullPathAndName(rootPath, fileFullName){
 	var name = splittedFullName[splittedFullName.length - 1];
 	
 	return [fullPath, name];
+}
+
+exports.makeZip = function(folderPath) {
+	var folder = folderLib.getFolder(folderPath);
+	console.info("Creating zip for folder: " + folderPath);
+
+	var baos = streams.createByteArrayOutputStream();
+	var zipOutputStream = zipAPI.createZipOutputStream(baos);
+	try {
+		traverseFolder(folder, "", zipOutputStream);
+	} finally {
+		zipOutputStream.close();
+	}
+	return baos.getBytes();
+};
+
+function traverseFolder(folder, path, zipOutputStream) {
+	folder.getChildren().forEach(function(child) {
+		console.info("Folder: " + folder.getName() + " Path: " + path + " Child: " + child.getName());
+		
+		var childObject = objectLib.getById(child.getId());
+		var zipEntry;
+		if (isFolder(child)) {
+			zipEntry = zipOutputStream.createZipEntry(path + "/" + child.getName() + "/");
+			console.log("Is directory: " + zipEntry.isDirectory());
+			console.log("Zip entry: " + zipEntry.getName());
+			zipOutputStream.putNextEntry(zipEntry);
+			traverseFolder(childObject, path + "/" + child.getName(), zipOutputStream);
+		} else {
+			zipEntry = zipOutputStream.createZipEntry(path + "/" + child.getName());
+			var fileStream = childObject.getContentStream().getStream();
+			zipEntry.writeData(streams.read(fileStream));
+			zipOutputStream.putNextEntry(zipEntry);
+		}
+	});
+}
+
+function isFolder(cmisObject) {
+	return cmisObject.getType() === "cmis:folder";
 }
