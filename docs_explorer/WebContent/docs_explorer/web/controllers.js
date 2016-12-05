@@ -18,6 +18,7 @@ angular
 	$scope.previewPath = readDocPath + '/preview';
 	var readFolderPath = readPath + '/folder';
 	var listFolderPath = readFolderPath + '/list';
+	$scope.downloadZipPath = readFolderPath + '/zip';
 
 	$scope.breadcrumbs = new Breadcrumbs();
 	
@@ -174,32 +175,6 @@ angular
             return this.queue.length < 100;
         }
     });
-    
-    //ZIP EXTRACT UPLOADER
-    
-    var zipUploader = $scope.zipUploader = new FileUploader({
-        url: zipUploadPath
-    });
-    
-    zipUploader.filters.push({
-        name: 'queueLimit',
-        fn: function(item /*{File|FileLikeObject}*/, options) {
-            return this.queue.length < 1;
-        }
-    });
-    
-    zipUploader.filters.push({
-        name: 'zipFilter',
-        fn: function(item /*{File|FileLikeObject}*/, options) {
-            return item.type === "application/zip";
-        }
-    });
-    
-    zipUploader.onBeforeUploadItem = function(item) {
-    	if (zipUploader.path){
-	    	item.url = zipUploadPath + "?path=" + zipUploader.path;
-    	}
-    };
 
     // UPLOADER CALLBACKS
 
@@ -214,6 +189,9 @@ angular
     };
     uploader.onBeforeUploadItem = function(item) {
 //        console.info('onBeforeUploadItem', item);
+		if ($scope.unpackZips && item.file.type === "application/zip"){
+			item.url = zipUploadPath + "?path=" + $scope.folder.path;
+		}
     };
     uploader.onProgressItem = function(fileItem, progress) {
 //        console.info('onProgressItem', fileItem, progress);
@@ -226,6 +204,8 @@ angular
     };
     uploader.onErrorItem = function(fileItem, response, status, headers) {
 //        console.info('onErrorItem', fileItem, response, status, headers);
+        var title = "Failed to uplaod item";
+        openErrorModal(title, response.err.message);
     };
     uploader.onCancelItem = function(fileItem, response, status, headers) {
 //        console.info('onCancelItem', fileItem, response, status, headers);
