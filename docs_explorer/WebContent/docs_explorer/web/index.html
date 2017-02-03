@@ -62,7 +62,7 @@
                <div class="list-group">
                   <div class="list-group-item my-list-item"
                      style="cursor: pointer;"
-                     ng-repeat="single in folder.children | filter: search | orderBy: '-type'" 
+                     ng-repeat="single in folder.children | filter: search | orderBy: ['-type', 'name']" 
                      ng-click="handleExplorerClick(single)"
                      ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
                      <input ng-show="inDeleteSession" ng-model="single['selected']" type="checkbox">
