@@ -1,0 +1,5 @@
+{
+  "extension":"/zeus/documents/extensions/cockpit_documents",
+  "extension-point":"/zeus/cockpit/extension_point/cockpit",
+  "description":"Develop extension for the Cockpit extension point"
+}
