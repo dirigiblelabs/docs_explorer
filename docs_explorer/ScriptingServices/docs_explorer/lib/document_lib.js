@@ -23,6 +23,25 @@ exports.uploadDocument = function(folder, document){
 	return new DocumentSerializer(newDocument);
 };
 
+exports.uploadDocumentOverwrite = function(folder, document){
+	var timestamp = new Date().getTime();
+	var newName = document.name + "-" + timestamp;
+	var oldName = document.name;
+	
+	document.name = newName;
+	exports.uploadDocument(folder, document);
+	
+	try {
+		var oldDoc = cmisObjectLib.getObject(folder.getPath() + "/" + oldName);
+		cmisObjectLib.deleteObject(oldDoc);	
+ 	} catch(e){
+ 		//do nothing
+ 	}
+	
+	var newDoc = cmisObjectLib.getObject(folder.getPath() + "/" + newName);
+	cmisObjectLib.renameObject(newDoc, oldName);
+};
+
 function craeteDocument(folder, fileName, size, mimetype, inputStream){
 	var contentStream = cmisSession.getObjectFactory().createContentStream(fileName, size, mimetype, inputStream);
 	var properties = {};

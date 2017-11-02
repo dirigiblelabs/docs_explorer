@@ -192,6 +192,10 @@ angular
 		if ($scope.unpackZips && item.file.name.endsWith(".zip")) {
 			item.url = zipUploadPath + "?path=" + $scope.folder.path;
 		}
+		
+		if ($scope.overwrite) {
+			item.url = item.url + "&overwrite=true";
+		}
     };
     uploader.onProgressItem = function(fileItem, progress) {
 //        console.info('onProgressItem', fileItem, progress);

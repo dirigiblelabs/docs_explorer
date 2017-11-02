@@ -20,9 +20,16 @@ function handlePost(){
 		if (path) { path = unescapePath(path); }
 		var documents = upload.parseRequest();
 		var result = [];
+		var overwrite = request.getParameter('overwrite');
+		
 		documents.forEach(function(document) {
 			var folder = folderLib.getFolder(path);
-			result.push(documentLib.uploadDocument(folder, document));
+			
+			if (overwrite){
+				result.push(documentLib.uploadDocumentOverwrite(folder, document));
+			} else {
+				result.push(documentLib.uploadDocument(folder, document));		
+			}
 		});
 	} else {
 		printError(response.BAD_REQUEST, 4, "The request's content must be 'multipart'");

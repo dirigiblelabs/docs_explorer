@@ -2,8 +2,6 @@
 /* eslint-env node, dirigible */
 
 var cmis = require('doc/cmis');
-var folderLib = require("docs_explorer/lib/folder_lib");
-
 var cmisSession = cmis.getSession();
 
 exports.getObject = function(path){
